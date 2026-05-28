@@ -85,11 +85,7 @@ export default function App() {
   }, [rows]);
 
   useEffect(() => {
-    if (!availableCities.length) return;
-    setSelectedCities((current) => {
-      const stillAvailable = current.filter((city) => availableCities.includes(city));
-      return stillAvailable.length ? stillAvailable : availableCities;
-    });
+    setSelectedCities((current) => current.filter((city) => availableCities.includes(city)));
   }, [availableCities]);
 
   useEffect(() => {
@@ -142,8 +138,11 @@ export default function App() {
     downloadTextFile(`aqi-${mode}-${metric}-filtered.csv`, toCsv(filteredRows));
   }
 
+  const hasSelectedCities = selectedCities.length > 0;
   const subtitle = startDate && endDate
-    ? `${availableCities.join("、")}，${startDate} 至 ${endDate}，展示${mode === "monthly" ? "月均" : "日度"} AQI。`
+    ? hasSelectedCities
+      ? `${selectedCities.join("、")}，${startDate} 至 ${endDate}，展示${mode === "monthly" ? "月均" : "日度"} ${metricLabel(metric)}。`
+      : `${startDate} 至 ${endDate}，请选择城市开始比较。`
     : `读取${mode === "monthly" ? "月均" : "日度"} AQI 数据中。`;
 
   return (
@@ -195,14 +194,16 @@ export default function App() {
               <button
                 type="button"
                 onClick={exportPng}
-                className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+                disabled={!hasSelectedCities || !filteredRows.length}
+                className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-300"
               >
                 导出 PNG
               </button>
               <button
                 type="button"
                 onClick={exportCsv}
-                className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                disabled={!hasSelectedCities || !filteredRows.length}
+                className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
               >
                 下载 CSV
               </button>
@@ -224,7 +225,7 @@ export default function App() {
               {status === "loading" ? "读取数据中" : status === "error" ? "数据读取失败" : `${filteredRows.length} 条记录`}
             </div>
           </div>
-          {status === "ready" ? (
+          {status === "ready" && hasSelectedCities ? (
             <Suspense fallback={<div className="flex h-[420px] items-center justify-center text-slate-500">正在加载图表...</div>}>
               <AqiTrendChart
                 rows={filteredRows}
@@ -236,7 +237,7 @@ export default function App() {
             </Suspense>
           ) : (
             <div className="flex h-[420px] items-center justify-center text-slate-500">
-              {status === "error" ? "请检查 data 目录下的 CSV 文件。" : "正在加载 CSV 数据..."}
+              {status === "error" ? "请检查 public/data 目录下的 CSV 文件。" : status === "loading" ? "正在加载 CSV 数据..." : "请选择至少一个城市查看趋势图。"}
             </div>
           )}
         </section>

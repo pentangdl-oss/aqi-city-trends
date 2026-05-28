@@ -5,7 +5,7 @@ export default function CitySelector({ cities, selectedCities, onChange }) {
     const next = selectedCities.includes(city)
       ? selectedCities.filter((item) => item !== city)
       : [...selectedCities, city];
-    onChange(next.length ? next : selectedCities);
+    onChange(next);
   }
 
   return (
