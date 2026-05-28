@@ -1,0 +1,31 @@
+{
+  "name": "aqi-city-trends",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "fetch:data": "node scripts/fetch-aqi-data.js",
+    "fetch:iqair": "node scripts/fetch-iqair-data.js",
+    "clean:data": "node scripts/clean-aqi-data.js",
+    "convert:monthly": "node scripts/convert-monthly-xlsx.js data/aqi_monthly_new.xlsx public/data/aqi_monthly.csv",
+    "convert:daily": "node scripts/convert-daily-screenshots.js \"data/daily capture\" data/aqi_daily_new.csv",
+    "mock:data": "node scripts/generate-mock-data.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "echarts": "^5.6.0",
+    "html2canvas": "^1.4.1",
+    "papaparse": "^5.5.3",
+    "vite": "^7.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  }
+}

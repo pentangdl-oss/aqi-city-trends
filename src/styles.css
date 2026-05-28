@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #17202a;
+  background: #f4f7f9;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.control-label {
+  @apply text-xs font-semibold uppercase tracking-wide text-slate-500;
+}
+
+.panel {
+  @apply border border-slate-200 bg-white shadow-sm;
+}
